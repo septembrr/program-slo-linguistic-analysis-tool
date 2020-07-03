@@ -55,7 +55,7 @@ All verbs, nouns and adjectives are then submitted to another tool, WordNet from
 
 This is also done through the command line, so WordNet must be installed on the server running the Program SLO tool.
 
-The specific dictionary location for WordNet (as well as a few other environment-specific variables) are specified in the command listed in link-parse.js, and must be altered depending on the server running this tool.
+The specific dictionary location for WordNet (as well as a few other environment-specific variables) are specified in the command listed in `link-parse.js`, and must be altered depending on the server running this tool.
 
 *Editing WordNet*
 
@@ -77,24 +77,24 @@ Though there may be many CSV files, don’t delete them unless you absolutely ha
 If you absolutely must delete, just be careful not to delete those files that have links on the admin report page. Since those links are recorded in the database, a script could potentially be written at a later point to automatically clean this up.
 
 ### Apache & Express
-This site is currently running on Apache, which includes root configuration on the Apache server to redirect all traffic from a certain port to a URL. This configuration was done by Tak Auyeung - contact him for more information.
+This site is currently running on Apache, which includes root configuration on the Apache server to redirect all traffic from a certain port to a URL.
 
 ### Forever
-To make the node process run forever, rather than having to start it every time with node app.js, use the npm module forever with forever start app.js. This will make the node process run in perpetuity.
+To make the node process run forever, rather than having to start it every time with `node app.js`, use the npm module forever with `forever start app.js`. This will make the node process run in perpetuity.
 
 ### Google Authentication
 This application uses Google Sign-In for Websites to manage authentication and verification for logged in users:
 https://developers.google.com/identity/sign-in/web
 
-When API changes need to be made, this can be done in the central location inside logins.js.
+When API changes need to be made, this can be done in the central location inside `logins.js`.
 
 ### Emails (Mailjet)
 Emails are sent to the submitter when a new program review is sent.
 
-The API details for Mailjet can be updated inside the logins.js file.
+The API details for Mailjet can be updated inside the `logins.js` file.
 
 ### HTTPS
-The site is set to run on HTTPS. This uses a self-signed certificate stored in a central location on the server - “../master/localhost.key” and “../master/localhost.crt”. These keys will need to be generated on any new environment.
+The site is set to run on HTTPS. This uses a self-signed certificate stored in a central location on the server - `../master/localhost.key` and `../master/localhost.crt`. These keys will need to be generated on any new environment.
 
 ## New Course Data
 The XML files used as a basis for parsing this data were extracted from Socrates.
