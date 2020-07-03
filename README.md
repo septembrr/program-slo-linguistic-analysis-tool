@@ -6,34 +6,34 @@ This tool was built for the American River College program and course student le
 ## File Structure
 The file structure and general purpose of each file is as follows:
 
-- /program_slo
-    - /includes
-        - extract-data.js				// get data from XML JSON obj
-        - link-parse.js				// get links, synonyms & SLO matches
-        - parse_xml.js				// parse XML into JSON obj
-        - routes.js				// express routes
-    - /public
-        - /css
-            - style.css			// site styles
-        - /csv					// generated CSVs - don’t delete
-        - /img					// associated imagery
-        - /js					// front end JS
-            - form.js				// customizes report submission form
-            - hide-match-weights.js		// hide/show weights on analysis page
-            - sticky-column.js		// make columns sticky on analysis page
-    - /views
-        - admin.pug				// admin report page
-        - analysis.pug				// analysis report page
-        - default.pug				// default wrapper for all pages
-        - index.pug				// homepage, new report page
-        - login.pug				// login page
-        - logout.pug				// logout page
-        - override.pug				// override submission page
-    - /xml						// storing XML files
-    - .port						// chosen port configured through apache
-    - app.js						// base routing for site through express
-    - logins.js					// mysql logins
-    - package.json					// npm packages installed
+- `/program_slo`
+    - `/includes`
+        - `extract-data.js`				// get data from XML JSON obj
+        - `link-parse.js`				// get links, synonyms & SLO matches
+        - `parse_xml.js`				// parse XML into JSON obj
+        - `routes.js`				// express routes
+    - `/public`
+        - `/css`
+            - `style.css`			// site styles
+        - `/csv`					// generated CSVs - don’t delete
+        - `/img`					// associated imagery
+        - `/js`					// front end JS
+            - `form.js`				// customizes report submission form
+            - `hide-match-weights.js`		// hide/show weights on analysis page
+            - `sticky-column.js`		// make columns sticky on analysis page
+    - `/views`
+        - `admin.pug`				// admin report page
+        - `analysis.pug`				// analysis report page
+        - `default.pug`				// default wrapper for all pages
+        - `index.pug`				// homepage, new report page
+        - `login.pug`				// login page
+        - `logout.pug`				// logout page
+        - `override.pug`				// override submission page
+    - `/xml`						// storing XML files
+    - `.port`						// chosen port configured through apache
+    - `app.js`						// base routing for site through express
+    - `logins.js`					// mysql and other logins
+    - `package.json`					// npm packages installed
 	
 ## Database Structure
 The table structure, fields and keys are listed in the diagram below.
