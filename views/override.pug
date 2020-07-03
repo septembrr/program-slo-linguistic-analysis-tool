@@ -1,0 +1,33 @@
+extends default
+
+block content
+    if message
+        div.content-inner
+            div.successMessage
+                p #{message}
+    div.content-inner
+        h3 Course Number: #{courseNum}
+        p SLO: #{slo}
+        h3 Enter Details for Override
+        form(action="/express/program_slo/override-submit", method="post")
+            fieldset
+                legend Name
+                input(type="text" name="firstName" value="" placeholder="First Name")
+                input(type="text" name="lastName" value="" placeholder="Last Name")
+            fieldset
+                legend Email
+                input(type="email" name="email" value="")
+            fieldset
+                legend Date
+                input(type="date" name="date")
+            fieldset
+                legend As a Content Expert, this Course Matches the Program SLOs:
+                input(type="radio" id="match-yes" name="matched" value="1")
+                label(for="match-yes") Yes
+                br
+                input(type="radio" id="match-no" name="matched" value="0")
+                label(for="match-no") No
+            input(type="hidden" id="progId" name="progId" value=progId)
+            input(type="hidden" id="courseNum" name="courseNum" value=courseNum)
+            input(type="hidden" id="slo" name="slo" value=slo)
+            input(type="submit" name="override-submit" value="Submit Override")

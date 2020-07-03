@@ -1,0 +1,37 @@
+extends default
+
+block content
+    if message
+        div.content-inner
+            if successMsg
+                div.successMessage
+                    p #{message}
+            else
+                div.failMessage
+                    p #{message}
+    div.content-inner
+        h3 Select Details
+        form#generate(action="/express/program_slo/analysis", method="get")
+            fieldset
+                legend Department
+                select(name="department" onChange="updateProgType(this);" required).department
+                    option(value="") Select Department
+                    each dept in form_depts
+                        option(value=dept.deptName id=dept.deptId) #{dept.deptName}
+            fieldset
+                legend Program Type
+                select(name="prog_type" onChange="updateProgName(this);" disabled required).prog-type
+                    option(value="") Select Program Type
+                    each type in form_progTypes
+                        option(value=type.progTypeShort class="dept-"+type.deptId id=type.progTypeShort+"-"+type.deptId) #{type.progTypeLong}
+            fieldset
+                legend Program Name
+                select(name="prog_name" onChange="updateProgId(this);" disabled required).prog-name
+                    option(value="") Select Program Name
+                    each name in form_progNames
+                        option(value=name.program_title class=name.progType+"-"+name.deptId id="prog_dept_id-"+name.progId+"-"+name.deptId) #{name.programTitle}
+            input(type="hidden" id="progId" name="progId" value="")
+            p 
+                i This tool may take a moment to load as the comparisons are generated, especially for programs with many courses. Please be patient!
+            input#report(type="submit" name="generate" value="Generate Report")
+    script(type="text/javascript" src="/express/program_slo/js/form.js")

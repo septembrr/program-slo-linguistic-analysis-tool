@@ -1,0 +1,157 @@
+extends default
+
+block content
+    div.content-inner
+        h3 Results: #{progName}
+        div.toggle-weight
+            label 
+                input(type="checkbox")#weight-toggle
+                span SHOW MATCH WEIGHTS
+        div.table-wrap
+            table#slo-match-table
+                thead
+                    tr
+                        th SLO
+                        th.pslo-support PSLO Supported?
+                        each course, index in courses
+                            th #{course.name}
+                tbody
+                    each slo, index in progSLO
+                        tr
+                            td.slo-text #{slo}
+                            if totalMatch[index] > 0
+                                td.match-content.success-match.pslo-support
+                                    div.match-result YES
+                                    div.match-info.match-weight-value
+                                        h5 Total Match Weight
+                                        p #{totalMatch[index]}
+                            else
+                                td.match-content.fail-match.pslo-support
+                                    div.match-result No Match
+                                    div.match-info
+                                        h5 No match for this SLO found in course(s) selected.
+                            each matchResult, matchIndex in matched[index]
+                                td.match-content
+                                    if matchResult.override.active
+                                        if matchResult.override.matched
+                                            div.match-result X
+                                            div.match-info 
+                                                h5 Matched
+                                                p Overridden on #{matchResult.override.date} by 
+                                                    a(href="mailto:"+matchResult.override.email) #{matchResult.override.faculty}
+                                                if role == "Admin" || role == "Reviewer"
+                                                    a.button(href="/express/program_slo/delete-override?progId="+progId+"&courseNum="+courses[matchIndex].name+"&slo="+slo) REMOVE OVERRIDE
+                                        else
+                                            div.match-result
+                                            div.match-info 
+                                                h5 No Match
+                                                p Overridden on #{matchResult.override.date} by 
+                                                    a(href="mailto"+matchResult.override.email) #{matchResult.override.faculty}
+                                                if role == "Admin" || role == "Reviewer"
+                                                    a.button(href="/express/program_slo/delete-override?progId="+progId+"&courseNum="+courses[matchIndex].name+"&slo="+slo) REMOVE OVERRIDE
+                                    else if matchResult.value > 0
+                                        div.match-result X
+                                        div.match-info 
+                                            div.match-weight-value
+                                                h5 Match Weight
+                                                p #{matchResult.value}
+                                            h5 Matched Keywords
+                                            p
+                                                each matchWord, wordIndex in matchResult.keywords
+                                                    if wordIndex == matchResult.keywords.length - 1
+                                                        span #{matchWord}
+                                                    else
+                                                        span #{matchWord}, 
+                                            if role == "Admin" || role == "Reviewer"
+                                                a.button(href="/express/program_slo/override?progId="+progId+"&courseNum="+courses[matchIndex].name+"&slo="+slo+"&override=override" target="_blank") OVERRIDE
+                                    else if !courses[matchIndex].found
+                                        div.match-result
+                                        div.match-info
+                                            h5 Course not found or no SLOs found
+                                            if role == "Admin" || role == "Reviewer"
+                                                a.button(href="/express/program_slo/override?progId="+progId+"&courseNum="+courses[matchIndex].name+"&slo="+slo+"&override=override" target="_blank") OVERRIDE
+                                    else
+                                        div.match-result
+                                        div.match-info
+                                            h5 No Match
+                                            if role == "Admin" || role == "Reviewer"
+                                                a.button(href="/express/program_slo/override?progId="+progId+"&courseNum="+courses[matchIndex].name+"&slo="+slo+"&override=override" target="_blank") OVERRIDE
+                    tr.slo-row
+                        td
+                        td.pslo-support
+                        each course, index in courses
+                            td(id="opener-"+index class="slo-link") See Course SLOs
+
+        div.total
+            div.match-weight-value
+                h4 Total Match Weight: #{totalMatch.reduce((a,b) => (a+b), 0)}
+            if csv
+                div.button
+                    a(href=csv target="_blank") Download Results CSV
+    if reviews[0]
+        div.content-inner
+            h3 Previous Reviews
+            each row in reviews
+                p
+                    strong #{row.date.slice(0,10)} - 
+                    a(href="mailto:"+row.email) #{row.firstName} #{row.lastName}
+                    span  - #{row.deptName}
+                    if row.actions
+                        span  - Actions Needed/Taken 
+                    else 
+                        span  - No Actions Needed/Taken 
+                    if row.notes
+                        i  - #{Buffer.from(row.notes).toString('utf-8')}
+                    if role == "Admin"
+                        span  - 
+                        a(href="/express/program_slo/delete-review?id="+row.id) Delete Review
+    if role == "Admin" || role == "Reviewer"
+        div.content-inner
+            h3 Submit Record of Review
+            form(action="/express/program_slo/submit-review", method="post")#review-form
+                fieldset
+                    legend Name
+                    input(type="text" name="firstName" value="" placeholder="First Name*" required)
+                    input(type="text" name="lastName" value="" placeholder="Last Name*" required)
+                div.content-row
+                    fieldset.content-col.col-3
+                        legend Email
+                        input(type="email" name="email" value="" required)
+                    fieldset.content-col.col-3
+                        legend Date
+                        input(type="date" name="date" required)
+                    fieldset.content-col.col-3
+                        legend Actions
+                        select(name="actions" required)
+                            option(value="") Select Item
+                            option(value="1" id="actions-needed") Actions Needed/Taken
+                            option(value="0" id="no-action") No Action Needed
+                fieldset
+                    legend Notes
+                    textarea(id="notes" name="notes" placeholder="Enter details here about actions taken or needed, if applicable." cols="100" rows="4")
+                input(type="hidden" id="progId-submit" name="progId" value=progId)
+                input(type="hidden" id="progName-submit" name="progName" value=progName)
+                input(type="hidden" id="dept-submit" name="dept" value=dept)
+                input(type="hidden" id="csv-path" name="csv" value=csv)
+                input(type="submit" name="submit-review" value="Submit Review")
+    div.content-inner
+        hr
+        div#about-accordion.acc-style
+            h3 How are the match weights calculated?
+            div.acc-content
+                p The course SLOs selected are analyzed and parsed into their parts of speech, after which synonyms are extracted and compared to the SLOs for the applicable program.
+                p Matches for a word's primary senses receives a value of 1, and matches for secondary synonyms receive a value of 0.5. The results of all matches are added together to produce the eventual match weight.
+        div.modals(id=courses.length)
+            if courses.length
+                each course,courseIndex in courses
+                    div(id="dialog-"+courseIndex title=course.name)
+                        if course.found
+                            div
+                                ul
+                                    each courseSLO in courseSLOs[courseIndex]
+                                        li #{courseSLO}
+                        else
+                            div
+                                strong Course not found or no SLOs found
+    script(type="text/javascript"  src="/express/program_slo/js/sticky-column.js")
+    script(type="text/javascript" src="/express/program_slo/js/hide-match-weights.js")

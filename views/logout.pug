@@ -1,0 +1,18 @@
+extends default
+
+block content
+    div.content-inner
+        h3 Logout
+
+    script.
+        function init() {
+
+            var clientobject = { client_id: '1090911943220-dhk8vcatlu49pmtsi34nuig1i3bboea5.apps.googleusercontent.com' };
+
+            gapi.load('auth2', function() {
+                gapi.auth2.init(clientobject).then(function(){
+                    var auth2 = gapi.auth2.getAuthInstance();
+                    auth2.signOut();
+                });
+            });
+        }

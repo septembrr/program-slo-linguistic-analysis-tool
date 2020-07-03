@@ -1,0 +1,80 @@
+doctype html
+html
+    head
+        meta(charset="UTF-8")
+        meta(name="robots" content="noindex")
+        meta(name="google-signin-client_id" content="581131780425-hu6ar6k7h2e966rgopmquqnah0lbtdr1.apps.googleusercontent.com")
+        title #{title}
+        link(rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css")
+        link(rel='stylesheet' type="text/css" href='/express/program_slo/css/style.css')
+        meta(name="viewport" content="width=device-width, initial-scale=1")
+        link(href='https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600&display=swap' rel='stylesheet')
+        link(rel='icon' href='/express/program_slo/img/favicon.png' type='image/x-icon')
+        script(src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous")
+        script(src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js")
+        script(src="https://apis.google.com/js/platform.js" async defer)
+        script.
+            $( function() {
+                $( "#about-accordion" ).accordion({ header: "h3", collapsible: true, active: false });
+            } );
+        script.
+            $(document).ready(function() {
+                if (document.getElementsByClassName('modals')[0]) {
+                    var num = parseInt(document.getElementsByClassName('modals')[0].id, 10);
+                    let dialogId = "";
+                    let openerId = "";
+
+                    for(let i = 0; i < num; i++) {
+                        $( '#dialog-'+i ).dialog({
+                            autoOpen: false,
+                            width: 650,
+                            maxWidth: '80%',
+                            show: {
+                                effect: "blind",
+                                duration: 500
+                            },
+                            hide: {
+                                effect: "blind",
+                                duration: 500
+                            }
+                        });
+                    
+                        $( '#opener-'+i ).on( "click", function() {
+                            $( '#dialog-'+i ).dialog( "open" );
+                        });
+                    }
+                }
+            });
+    body
+        block header
+            header.header
+                a(href="/express/program_slo/" title="Linguistic Analysis Tool")
+                    img(src='/express/program_slo/img/arc-logo.svg').main-logo
+                div.nav-bar
+                    div.nav-content-wrap
+                        div.page-title
+                            h1 #{title}
+                            h2 #{subtitle}
+                        div#menu
+                            ul 
+                                li
+                                    a(href="/express/program_slo/") New Report
+                                li
+                                    if role == "Admin"
+                                        a(href="/express/program_slo/admin") Admin Report
+                                li
+                                    if role == "Admin" || role == "Reviewer"
+                                        a(href="/express/program_slo/logout") Logout
+                                    else 
+                                        a(href="/express/program_slo/login") Login
+        div.content
+            block content
+        block footer
+            footer
+                div.content-inner
+                    hr
+                    p American River College, Updated March 2020. Questions, please contact 
+                        a(href="mailto:ShimizY@arc.losrios.edu") Yujiro Shimizu 
+                        span or 
+                        a(href="mailto:ArrietC@arc.losrios.edu") Corinne Arrieta
+                    p For best results, please use this tool on a desktop computer.

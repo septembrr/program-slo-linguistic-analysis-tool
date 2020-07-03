@@ -1,0 +1,79 @@
+extends default
+
+block content
+    if reviews[0]        
+        div.content-inner
+            h3 Reviews
+            div.table-wrap
+                table
+                    thead
+                        tr
+                            th Department
+                            th Program
+                            th Date
+                            th Faculty Name
+                            th Email
+                            th Actions Needed / Taken
+                            th Notes
+                            th CSV
+                            th Delete?
+                    tbody
+                        each review, index in reviews
+                            tr
+                                td #{review.deptName}
+                                td #{review.progName}
+                                td #{review.date.slice(0,10)}
+                                td #{review.firstName} #{review.lastName}
+                                td #{review.email}
+                                if review.actions
+                                    td Yes
+                                else
+                                    td No
+                                td #{Buffer.from(review.notes).toString('utf-8')}
+                                td.cell-link
+                                    if review.csv
+                                        a(href=review.csv) Download
+                                td.cell-link
+                                    a(href="/express/program_slo/delete-review?id="+review.id) Delete
+            div.total
+                if csv
+                    div.button
+                        a(href=csv target="_blank") Download Results CSV
+    if users[0]        
+        div.content-inner
+            hr
+            h3 Users
+            div.table-wrap
+                table
+                    thead
+                        tr
+                            th Name
+                            th Email
+                            th Role
+                            th Delete?
+                    tbody
+                        each user, index in users
+                            tr
+                                td #{user.firstName} #{user.lastName}
+                                td #{user.email}
+                                td #{user.role}
+                                td.cell-link
+                                    a(href="/express/program_slo/admin?delete-user=1&id="+user.id) Delete
+    div.content-inner
+        h3 Add New User
+        form(action="/express/program_slo/admin", method="get")
+            div.content-row
+                fieldset
+                    legend Name
+                    input(type="text" name="firstName" value="" placeholder="First Name*" required)
+                    input(type="text" name="lastName" value="" placeholder="Last Name*" required)
+                fieldset.content-col.col-4
+                    legend Email
+                    input(type="email" name="email" value="" required)
+                fieldset.content-col.col-4
+                    legend Role
+                    select(name="role" required)
+                        option(value="") Select Item
+                        option(value="Reviewer" id="reviewer") Reviewer
+                        option(value="Admin" id="admin") Admin
+            input(type="submit" name="add-user" value="Add User")

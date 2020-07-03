@@ -1,0 +1,41 @@
+extends default
+
+block content
+    div.content-inner
+        h3 Login
+        div.total
+            div(class="g-signin2" onclick="clickLogin()" data-onsuccess="onSignIn")
+
+    script.
+        var clicked = false;
+
+        function clickLogin() {
+            clicked = true;
+        }
+
+        function onSignIn(googleUser) {
+            if (clicked) {
+                var profile = googleUser.getBasicProfile();
+                var id_token = googleUser.getAuthResponse().id_token;
+
+                var xhr = new XMLHttpRequest();
+                //- xhr.open('GET', 'https://power.arc.losrios.edu/express/program_slo/auth?idtoken='+id_token);
+                xhr.open('POST', 'https://power.arc.losrios.edu/express/program_slo/auth');
+                xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                xhr.send('idtoken=' + id_token);
+                //- xhr.send(null);
+                xhr.onload = function() {
+                    if (xhr.responseText == 'Invalid') {
+                        //- console.log(xhr.responseText);
+                        var auth2 = gapi.auth2.getAuthInstance();
+                        auth2.signOut();
+                    } else {
+                        //- console.log(xhr.responseText);
+                        window.location.href = "https://power.arc.losrios.edu/express/program_slo/";
+                    }
+                };
+            } else {
+                var auth2 = gapi.auth2.getAuthInstance();
+                auth2.signOut();
+            }
+        }
